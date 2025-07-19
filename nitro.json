@@ -1,0 +1,17 @@
+{
+  "cxxNamespace": ["documentcamera"],
+  "ios": {
+    "iosModuleName": "DocumentCamera"
+  },
+  "android": {
+    "androidNamespace": ["documentcamera"],
+    "androidCxxLibName": "documentcamera"
+  },
+  "autolinking": {
+    "DocumentCamera": {
+      "swift": "DocumentCamera",
+      "kotlin": "DocumentCamera"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
