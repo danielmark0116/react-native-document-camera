@@ -13,13 +13,13 @@ class DocumentCamera: HybridDocumentCameraSpec {
         scannerDelegate = delegate
 
         guard let rootVC = RCTPresentedViewController() else {
-            promise.reject(withError: ScanErrors.CouldNotConvertToJPG)
+            promise.reject(withError: ScanErrors.couldNotConvertToJPG)
             scannerDelegate = nil
             return promise
         }
 
         guard VNDocumentCameraViewController.isSupported else {
-            promise.reject(withError: ScanErrors.DeviceNotSupported)
+            promise.reject(withError: ScanErrors.deviceNotSupported)
             scannerDelegate = nil
             return promise
         }
@@ -53,31 +53,61 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
         didFinishWith scan: VNDocumentCameraScan
     ) {
         controller.dismiss(animated: true)
-        defer { parent?.clearDelegate() }
 
         guard scan.pageCount > 0 else {
-            promise.reject(withError: ScanErrors.NoPagesScanned)
+            promise.reject(withError: ScanErrors.noPagesScanned)
             return
         }
 
         var docScans: [DocumentScan] = []
 
-        guard let data = scan.imageOfPage(at: 0).jpegData(compressionQuality: 0.8) else {
-            promise.reject(withError: ScanErrors.CouldNotConvertToJPG)
-            return
-        }
+        for pageNumber in 0 ..< scan.pageCount {
+            let image = scan.imageOfPage(at: pageNumber)
 
-        let tmpURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("\(UUID().uuidString).jpg")
-        do {
-            try data.write(to: tmpURL, options: .atomic)
+            guard let jpegData = image.jpegData(compressionQuality: 0.8) else {
+                promise.reject(withError: ScanErrors.couldNotConvertToJPG)
+                return
+            }
+
+            let tmpURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("\(UUID().uuidString).jpg")
+
             let docScan = DocumentScan(imageUri: tmpURL.absoluteString, ocrText: "")
 
-            docScans.append(docScan)
+            do {
+                try jpegData.write(to: tmpURL, options: .atomic)
+            } catch {
+                promise.reject(withError: ScanErrors.couldNotWriteScanToFS)
+            }
 
-            promise.resolve(withResult: docScans)
-        } catch {
-            promise.reject(withError: ScanErrors.CouldNotWriteScanToFS)
+            docScans.append(docScan)
+        }
+
+        // Now do OCR asynchronously
+        // We want to process all scans in the background AFTER we close the camera view controller
+        // It allows for better user experience (e.g. not blocking the UI)
+        DispatchQueue.global(qos: .userInitiated).async {
+            var finalScans = docScans
+
+            for (index, scanItem) in finalScans.enumerated() {
+                let path = URL(string: scanItem.imageUri)!
+                if let imgData = try? Data(contentsOf: path),
+                   let image = UIImage(data: imgData)
+                {
+                    do {
+                        let text = try self.extractTextFromScan(image: image)
+                        finalScans[index].ocrText = text
+                    } catch {
+                        // you can handle OCR errors individually or ignore
+                    }
+                }
+            }
+
+            // Once OCR done, resolve promise on main thread
+            DispatchQueue.main.async {
+                self.promise.resolve(withResult: finalScans)
+                self.parent?.clearDelegate()
+            }
         }
     }
 
@@ -85,7 +115,7 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
         _ controller: VNDocumentCameraViewController
     ) {
         controller.dismiss(animated: true)
-        promise.reject(withError: ScanErrors.UserCancelled)
+        promise.reject(withError: ScanErrors.userCancelled)
         parent?.clearDelegate()
     }
 
@@ -94,91 +124,48 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
         didFailWithError _: Error
     ) {
         controller.dismiss(animated: true)
-        promise.reject(withError: ScanErrors.Unknown)
+        promise.reject(withError: ScanErrors.unknown)
         parent?.clearDelegate()
     }
 
-    func extractTextFromScan(scan: VNDocumentCameraScan, shouldExtractText _: Bool?) {
-        for pageNumber in 0 ..< scan.pageCount {
-            let image = scan.imageOfPage(at: pageNumber)
-            guard let cgImage = image.cgImage else { continue }
+    func extractTextFromScan(image: UIImage) throws -> String {
+        guard let cgImage = image.cgImage else { return "" }
 
-            let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-            let request = VNRecognizeTextRequest { request, _ in
-                guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
-                var recognizedText = ""
-                for observation in observations {
-                    guard let topCandidate = observation.topCandidates(1).first else { continue }
-                    recognizedText += topCandidate.string + "\n"
-                }
-                print("Recognized text for page \(pageNumber + 1): \n\(recognizedText)")
-            }
+        var recognizedText = ""
 
-            request.recognitionLanguages = ["en-US"] // Or your desired language
-            request.usesLanguageCorrection = true // Optional: Enable language correction
-
-            do {
-                try requestHandler.perform([request])
-            } catch {
-                print("Error performing text recognition: \(error)")
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        let request = VNRecognizeTextRequest { request, _ in
+            guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
+            for observation in observations {
+                guard let topCandidate = observation.topCandidates(1).first else { continue }
+                recognizedText += topCandidate.string + "\n"
             }
         }
+
+        request.usesLanguageCorrection = true // Optional: Enable language correction
+
+        if #available(iOS 16.0, *) {
+            request.automaticallyDetectsLanguage = true
+        } else {
+            request.recognitionLanguages = ["en-US"] // Or your desired language
+        }
+
+        do {
+            try requestHandler.perform([request])
+        } catch {
+            //
+        }
+
+        return recognizedText
     }
 }
 
 enum ScanErrors: Error {
-    case NoPagesScanned
-    case CouldNotConvertToJPG
-    case CouldNotWriteScanToFS
-    case UserCancelled
-    case Unknown
-    case DeviceNotSupported
+    case noPagesScanned
+    case couldNotConvertToJPG
+    case couldNotWriteScanToFS
+    case userCancelled
+    case unknown
+    case deviceNotSupported
+    case ocrFailed
 }
-
-// extension DocumentCamera: VNDocumentCameraViewControllerDelegate {
-//  public func documentCameraViewController(
-//     _ controller: VNDocumentCameraViewController,
-//     didFinishWith scan: VNDocumentCameraScan
-//   ) {
-//     controller.dismiss(animated: true)
-//
-//     guard scan.pageCount > 0 else {
-//       self.promise?.reject(withError: ScanErrors.NoPagesScanned)
-//       return
-//     }
-//
-//     let img = scan.imageOfPage(at: 0)
-//     guard let data = img.jpegData(compressionQuality: 0.8) else {
-//       self.promise?.reject(withError: ScanErrors.CouldNotConvertToJPG)
-//       return
-//     }
-//
-//     let tmpURL = FileManager.default.temporaryDirectory
-//       .appendingPathComponent("\(UUID().uuidString).jpg")
-//     do {
-//       try data.write(to: tmpURL, options: .atomic)
-//       self.promise?.resolve(withResult: [tmpURL.absoluteString])
-//     } catch {
-//       self.promise?.reject(withError: ScanErrors.CouldNotWriteScanToFS)
-//     }
-//   }
-//
-//
-//  public func documentCameraViewControllerDidCancel(
-//    _ controller: VNDocumentCameraViewController
-//  ) {
-//    controller.dismiss(animated: true)
-//    self.promise?.reject(withError: ScanErrors.UserCancelled)
-//    removeCallbacks()
-//  }
-//
-//  public func documentCameraViewController(
-//    _ controller: VNDocumentCameraViewController,
-//    didFailWithError error: Error
-//  ) {
-//    controller.dismiss(animated: true)
-//    self.promise?.reject(withError: ScanErrors.Unknown)
-//    removeCallbacks()
-//  }
-//
-// }
