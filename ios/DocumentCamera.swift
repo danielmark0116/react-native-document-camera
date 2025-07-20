@@ -7,9 +7,9 @@ import VisionKit
 class DocumentCamera: HybridDocumentCameraSpec {
     private var scannerDelegate: ScannerDelegate?
 
-    public func scanDocuments() throws -> NitroModules.Promise<[DocumentScan]> {
+    public func scanDocuments(config: DocumentScanConfig) throws -> NitroModules.Promise<[DocumentScan]> {
         let promise = Promise<[DocumentScan]>()
-        let delegate = ScannerDelegate(parent: self, promise: promise)
+        let delegate = ScannerDelegate(parent: self, promise: promise, config: config)
         scannerDelegate = delegate
 
         guard let rootVC = RCTPresentedViewController() else {
@@ -26,7 +26,7 @@ class DocumentCamera: HybridDocumentCameraSpec {
 
         DispatchQueue.main.async {
             let scanner = VNDocumentCameraViewController()
-            scanner.delegate = delegate
+            scanner.delegate = self.scannerDelegate
             rootVC.present(scanner, animated: true)
         }
 
@@ -41,10 +41,12 @@ class DocumentCamera: HybridDocumentCameraSpec {
 private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate {
     weak var parent: DocumentCamera?
     let promise: Promise<[DocumentScan]>
+    let config: DocumentScanConfig?
 
-    init(parent: DocumentCamera, promise: Promise<[DocumentScan]>) {
+    init(parent: DocumentCamera, promise: Promise<[DocumentScan]>, config: DocumentScanConfig? = nil) {
         self.parent = parent
         self.promise = promise
+        self.config = config
         super.init()
     }
 
@@ -81,6 +83,12 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             }
 
             docScans.append(docScan)
+        }
+
+        guard let withOcr = config?.withOcr, withOcr else {
+            promise.resolve(withResult: docScans)
+
+            return
         }
 
         // Now do OCR asynchronously

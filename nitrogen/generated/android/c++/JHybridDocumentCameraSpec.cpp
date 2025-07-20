@@ -9,6 +9,8 @@
 
 // Forward declaration of `DocumentScan` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScan; }
+// Forward declaration of `DocumentScanConfig` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 
 #include <NitroModules/Promise.hpp>
 #include <vector>
@@ -16,6 +18,8 @@ namespace margelo::nitro::documentcamera { struct DocumentScan; }
 #include <NitroModules/JPromise.hpp>
 #include "JDocumentScan.hpp"
 #include <string>
+#include "DocumentScanConfig.hpp"
+#include "JDocumentScanConfig.hpp"
 
 namespace margelo::nitro::documentcamera {
 
@@ -38,9 +42,9 @@ namespace margelo::nitro::documentcamera {
   
 
   // Methods
-  std::shared_ptr<Promise<std::vector<DocumentScan>>> JHybridDocumentCameraSpec::scanDocuments() {
-    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("scanDocuments");
-    auto __result = method(_javaPart);
+  std::shared_ptr<Promise<std::vector<DocumentScan>>> JHybridDocumentCameraSpec::scanDocuments(const DocumentScanConfig& config) {
+    static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JDocumentScanConfig> /* config */)>("scanDocuments");
+    auto __result = method(_javaPart, JDocumentScanConfig::fromCpp(config));
     return [&]() {
       auto __promise = Promise<std::vector<DocumentScan>>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {

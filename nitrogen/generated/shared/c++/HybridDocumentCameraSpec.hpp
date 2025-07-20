@@ -15,10 +15,13 @@
 
 // Forward declaration of `DocumentScan` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScan; }
+// Forward declaration of `DocumentScanConfig` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 
 #include <NitroModules/Promise.hpp>
 #include <vector>
 #include "DocumentScan.hpp"
+#include "DocumentScanConfig.hpp"
 
 namespace margelo::nitro::documentcamera {
 
@@ -51,7 +54,7 @@ namespace margelo::nitro::documentcamera {
 
     public:
       // Methods
-      virtual std::shared_ptr<Promise<std::vector<DocumentScan>>> scanDocuments() = 0;
+      virtual std::shared_ptr<Promise<std::vector<DocumentScan>>> scanDocuments(const DocumentScanConfig& config) = 0;
 
     protected:
       // Hybrid Setup

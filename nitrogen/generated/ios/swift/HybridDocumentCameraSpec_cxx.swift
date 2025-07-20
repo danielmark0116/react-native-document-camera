@@ -101,9 +101,9 @@ public class HybridDocumentCameraSpec_cxx {
 
   // Methods
   @inline(__always)
-  public final func scanDocuments() -> bridge.Result_std__shared_ptr_Promise_std__vector_DocumentScan____ {
+  public final func scanDocuments(config: DocumentScanConfig) -> bridge.Result_std__shared_ptr_Promise_std__vector_DocumentScan____ {
     do {
-      let __result = try self.__implementation.scanDocuments()
+      let __result = try self.__implementation.scanDocuments(config: config)
       let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_DocumentScan___ in
         let __promise = bridge.create_std__shared_ptr_Promise_std__vector_DocumentScan___()
         let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_DocumentScan___(__promise)

@@ -42,7 +42,7 @@ abstract class HybridDocumentCameraSpec: HybridObject() {
   // Methods
   @DoNotStrip
   @Keep
-  abstract fun scanDocuments(): Promise<Array<DocumentScan>>
+  abstract fun scanDocuments(config: DocumentScanConfig): Promise<Array<DocumentScan>>
 
   private external fun initHybrid(): HybridData
 
