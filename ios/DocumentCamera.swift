@@ -7,8 +7,8 @@ import VisionKit
 class DocumentCamera: HybridDocumentCameraSpec {
     private var scannerDelegate: ScannerDelegate?
 
-    public func scanDocuments(config: DocumentScanConfig) throws -> NitroModules.Promise<[DocumentScan]> {
-        let promise = Promise<[DocumentScan]>()
+    public func scanDocuments(config: DocumentScanConfig) throws -> NitroModules.Promise<DocumentScan> {
+        let promise = Promise<DocumentScan>()
         let delegate = ScannerDelegate(parent: self, promise: promise, config: config)
         scannerDelegate = delegate
 
@@ -40,10 +40,10 @@ class DocumentCamera: HybridDocumentCameraSpec {
 
 private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate {
     weak var parent: DocumentCamera?
-    let promise: Promise<[DocumentScan]>
+    let promise: Promise<DocumentScan>
     let config: DocumentScanConfig?
 
-    init(parent: DocumentCamera, promise: Promise<[DocumentScan]>, config: DocumentScanConfig? = nil) {
+    init(parent: DocumentCamera, promise: Promise<DocumentScan>, config: DocumentScanConfig? = nil) {
         self.parent = parent
         self.promise = promise
         self.config = config
@@ -61,7 +61,10 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             return
         }
 
-        var docScans: [DocumentScan] = []
+        var docScans: [DocumentPage] = []
+        var docScan = DocumentScan()
+
+        docScan.title = scan.title
 
         for pageNumber in 0 ..< scan.pageCount {
             let image = scan.imageOfPage(at: pageNumber)
@@ -74,7 +77,7 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             let tmpURL = FileManager.default.temporaryDirectory
                 .appendingPathComponent("\(UUID().uuidString).jpg")
 
-            let docScan = DocumentScan(imageUri: tmpURL.absoluteString, ocrText: "")
+            let docScan = DocumentPage(imageUri: tmpURL.absoluteString, ocrText: "")
 
             do {
                 try jpegData.write(to: tmpURL, options: .atomic)
@@ -85,8 +88,10 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             docScans.append(docScan)
         }
 
+        docScan.pages = docScans
+
         guard let withOcr = config?.withOcr, withOcr else {
-            promise.resolve(withResult: docScans)
+            promise.resolve(withResult: docScan)
 
             return
         }
@@ -111,9 +116,11 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
                 }
             }
 
+            docScan.pages = finalScans
+
             // Once OCR done, resolve promise on main thread
             DispatchQueue.main.async {
-                self.promise.resolve(withResult: finalScans)
+                self.promise.resolve(withResult: docScan)
                 self.parent?.clearDelegate()
             }
         }

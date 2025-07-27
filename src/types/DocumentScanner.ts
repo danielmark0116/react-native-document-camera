@@ -1,6 +1,11 @@
-export type DocumentScan = {
+export type DocumentPage = {
   imageUri: string;
   ocrText: string;
+};
+
+export type DocumentScan = {
+  title: string;
+  pages: DocumentPage[];
 };
 
 export type DocumentScanConfig = {

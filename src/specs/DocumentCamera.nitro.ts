@@ -6,5 +6,5 @@ import type {
 
 export interface DocumentCamera
   extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
-  scanDocuments(config: DocumentScanConfig): Promise<DocumentScan[]>;
+  scanDocuments(config: DocumentScanConfig): Promise<DocumentScan>;
 }

@@ -18,29 +18,41 @@ public extension DocumentScan {
   /**
    * Create a new instance of `DocumentScan`.
    */
-  init(imageUri: String, ocrText: String) {
-    self.init(std.string(imageUri), std.string(ocrText))
+  init(title: String, pages: [DocumentPage]) {
+    self.init(std.string(title), { () -> bridge.std__vector_DocumentPage_ in
+      var __vector = bridge.create_std__vector_DocumentPage_(pages.count)
+      for __item in pages {
+        __vector.push_back(__item)
+      }
+      return __vector
+    }())
   }
 
-  var imageUri: String {
+  var title: String {
     @inline(__always)
     get {
-      return String(self.__imageUri)
+      return String(self.__title)
     }
     @inline(__always)
     set {
-      self.__imageUri = std.string(newValue)
+      self.__title = std.string(newValue)
     }
   }
   
-  var ocrText: String {
+  var pages: [DocumentPage] {
     @inline(__always)
     get {
-      return String(self.__ocrText)
+      return self.__pages.map({ __item in __item })
     }
     @inline(__always)
     set {
-      self.__ocrText = std.string(newValue)
+      self.__pages = { () -> bridge.std__vector_DocumentPage_ in
+        var __vector = bridge.create_std__vector_DocumentPage_(newValue.count)
+        for __item in newValue {
+          __vector.push_back(__item)
+        }
+        return __vector
+      }()
     }
   }
 }

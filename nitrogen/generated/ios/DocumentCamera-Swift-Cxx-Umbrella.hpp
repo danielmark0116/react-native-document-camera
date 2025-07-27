@@ -8,6 +8,8 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `DocumentPage` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentPage; }
 // Forward declaration of `DocumentScanConfig` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 // Forward declaration of `DocumentScan` to properly resolve imports.
@@ -16,6 +18,7 @@ namespace margelo::nitro::documentcamera { struct DocumentScan; }
 namespace margelo::nitro::documentcamera { class HybridDocumentCameraSpec; }
 
 // Include C++ defined types
+#include "DocumentPage.hpp"
 #include "DocumentScan.hpp"
 #include "DocumentScanConfig.hpp"
 #include "HybridDocumentCameraSpec.hpp"

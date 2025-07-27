@@ -51,7 +51,7 @@ namespace margelo::nitro::documentcamera {
 
   public:
     // Methods
-    std::shared_ptr<Promise<std::vector<DocumentScan>>> scanDocuments(const DocumentScanConfig& config) override;
+    std::shared_ptr<Promise<DocumentScan>> scanDocuments(const DocumentScanConfig& config) override;
 
   private:
     friend HybridBase;

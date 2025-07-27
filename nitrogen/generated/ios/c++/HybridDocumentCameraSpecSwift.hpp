@@ -14,13 +14,16 @@ namespace DocumentCamera { class HybridDocumentCameraSpec_cxx; }
 
 // Forward declaration of `DocumentScan` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScan; }
+// Forward declaration of `DocumentPage` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentPage; }
 // Forward declaration of `DocumentScanConfig` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 
 #include <NitroModules/Promise.hpp>
-#include <vector>
 #include "DocumentScan.hpp"
 #include <string>
+#include <vector>
+#include "DocumentPage.hpp"
 #include "DocumentScanConfig.hpp"
 
 #include "DocumentCamera-Swift-Cxx-Umbrella.hpp"
@@ -62,7 +65,7 @@ namespace margelo::nitro::documentcamera {
 
   public:
     // Methods
-    inline std::shared_ptr<Promise<std::vector<DocumentScan>>> scanDocuments(const DocumentScanConfig& config) override {
+    inline std::shared_ptr<Promise<DocumentScan>> scanDocuments(const DocumentScanConfig& config) override {
       auto __result = _swiftPart.scanDocuments(config);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());

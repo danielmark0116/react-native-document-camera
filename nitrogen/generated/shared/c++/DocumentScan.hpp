@@ -18,9 +18,12 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `DocumentPage` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentPage; }
 
 #include <string>
+#include <vector>
+#include "DocumentPage.hpp"
 
 namespace margelo::nitro::documentcamera {
 
@@ -29,12 +32,12 @@ namespace margelo::nitro::documentcamera {
    */
   struct DocumentScan {
   public:
-    std::string imageUri     SWIFT_PRIVATE;
-    std::string ocrText     SWIFT_PRIVATE;
+    std::string title     SWIFT_PRIVATE;
+    std::vector<DocumentPage> pages     SWIFT_PRIVATE;
 
   public:
     DocumentScan() = default;
-    explicit DocumentScan(std::string imageUri, std::string ocrText): imageUri(imageUri), ocrText(ocrText) {}
+    explicit DocumentScan(std::string title, std::vector<DocumentPage> pages): title(title), pages(pages) {}
   };
 
 } // namespace margelo::nitro::documentcamera
@@ -49,14 +52,14 @@ namespace margelo::nitro {
     static inline DocumentScan fromJSI(jsi::Runtime& runtime, const jsi::Value& arg) {
       jsi::Object obj = arg.asObject(runtime);
       return DocumentScan(
-        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "imageUri")),
-        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "ocrText"))
+        JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, "title")),
+        JSIConverter<std::vector<DocumentPage>>::fromJSI(runtime, obj.getProperty(runtime, "pages"))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const DocumentScan& arg) {
       jsi::Object obj(runtime);
-      obj.setProperty(runtime, "imageUri", JSIConverter<std::string>::toJSI(runtime, arg.imageUri));
-      obj.setProperty(runtime, "ocrText", JSIConverter<std::string>::toJSI(runtime, arg.ocrText));
+      obj.setProperty(runtime, "title", JSIConverter<std::string>::toJSI(runtime, arg.title));
+      obj.setProperty(runtime, "pages", JSIConverter<std::vector<DocumentPage>>::toJSI(runtime, arg.pages));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -64,8 +67,8 @@ namespace margelo::nitro {
         return false;
       }
       jsi::Object obj = value.getObject(runtime);
-      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "imageUri"))) return false;
-      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "ocrText"))) return false;
+      if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, "title"))) return false;
+      if (!JSIConverter<std::vector<DocumentPage>>::canConvert(runtime, obj.getProperty(runtime, "pages"))) return false;
       return true;
     }
   };

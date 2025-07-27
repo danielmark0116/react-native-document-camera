@@ -9,15 +9,19 @@
 
 // Forward declaration of `DocumentScan` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScan; }
+// Forward declaration of `DocumentPage` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentPage; }
 // Forward declaration of `DocumentScanConfig` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 
 #include <NitroModules/Promise.hpp>
-#include <vector>
 #include "DocumentScan.hpp"
 #include <NitroModules/JPromise.hpp>
 #include "JDocumentScan.hpp"
 #include <string>
+#include <vector>
+#include "DocumentPage.hpp"
+#include "JDocumentPage.hpp"
 #include "DocumentScanConfig.hpp"
 #include "JDocumentScanConfig.hpp"
 
@@ -42,23 +46,14 @@ namespace margelo::nitro::documentcamera {
   
 
   // Methods
-  std::shared_ptr<Promise<std::vector<DocumentScan>>> JHybridDocumentCameraSpec::scanDocuments(const DocumentScanConfig& config) {
+  std::shared_ptr<Promise<DocumentScan>> JHybridDocumentCameraSpec::scanDocuments(const DocumentScanConfig& config) {
     static const auto method = javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JDocumentScanConfig> /* config */)>("scanDocuments");
     auto __result = method(_javaPart, JDocumentScanConfig::fromCpp(config));
     return [&]() {
-      auto __promise = Promise<std::vector<DocumentScan>>::create();
+      auto __promise = Promise<DocumentScan>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
-        auto __result = jni::static_ref_cast<jni::JArrayClass<JDocumentScan>>(__boxedResult);
-        __promise->resolve([&]() {
-          size_t __size = __result->size();
-          std::vector<DocumentScan> __vector;
-          __vector.reserve(__size);
-          for (size_t __i = 0; __i < __size; __i++) {
-            auto __element = __result->getElement(__i);
-            __vector.push_back(__element->toCpp());
-          }
-          return __vector;
-        }());
+        auto __result = jni::static_ref_cast<JDocumentScan>(__boxedResult);
+        __promise->resolve(__result->toCpp());
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
         jni::JniException __jniError(__throwable);

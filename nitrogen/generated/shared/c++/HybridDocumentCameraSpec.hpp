@@ -19,7 +19,6 @@ namespace margelo::nitro::documentcamera { struct DocumentScan; }
 namespace margelo::nitro::documentcamera { struct DocumentScanConfig; }
 
 #include <NitroModules/Promise.hpp>
-#include <vector>
 #include "DocumentScan.hpp"
 #include "DocumentScanConfig.hpp"
 
@@ -54,7 +53,7 @@ namespace margelo::nitro::documentcamera {
 
     public:
       // Methods
-      virtual std::shared_ptr<Promise<std::vector<DocumentScan>>> scanDocuments(const DocumentScanConfig& config) = 0;
+      virtual std::shared_ptr<Promise<DocumentScan>> scanDocuments(const DocumentScanConfig& config) = 0;
 
     protected:
       // Hybrid Setup

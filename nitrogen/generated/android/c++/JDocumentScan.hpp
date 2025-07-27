@@ -10,7 +10,10 @@
 #include <fbjni/fbjni.h>
 #include "DocumentScan.hpp"
 
+#include "DocumentPage.hpp"
+#include "JDocumentPage.hpp"
 #include <string>
+#include <vector>
 
 namespace margelo::nitro::documentcamera {
 
@@ -31,13 +34,22 @@ namespace margelo::nitro::documentcamera {
     [[nodiscard]]
     DocumentScan toCpp() const {
       static const auto clazz = javaClassStatic();
-      static const auto fieldImageUri = clazz->getField<jni::JString>("imageUri");
-      jni::local_ref<jni::JString> imageUri = this->getFieldValue(fieldImageUri);
-      static const auto fieldOcrText = clazz->getField<jni::JString>("ocrText");
-      jni::local_ref<jni::JString> ocrText = this->getFieldValue(fieldOcrText);
+      static const auto fieldTitle = clazz->getField<jni::JString>("title");
+      jni::local_ref<jni::JString> title = this->getFieldValue(fieldTitle);
+      static const auto fieldPages = clazz->getField<jni::JArrayClass<JDocumentPage>>("pages");
+      jni::local_ref<jni::JArrayClass<JDocumentPage>> pages = this->getFieldValue(fieldPages);
       return DocumentScan(
-        imageUri->toStdString(),
-        ocrText->toStdString()
+        title->toStdString(),
+        [&]() {
+          size_t __size = pages->size();
+          std::vector<DocumentPage> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = pages->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }()
       );
     }
 
@@ -48,8 +60,16 @@ namespace margelo::nitro::documentcamera {
     [[maybe_unused]]
     static jni::local_ref<JDocumentScan::javaobject> fromCpp(const DocumentScan& value) {
       return newInstance(
-        jni::make_jstring(value.imageUri),
-        jni::make_jstring(value.ocrText)
+        jni::make_jstring(value.title),
+        [&]() {
+          size_t __size = value.pages.size();
+          jni::local_ref<jni::JArrayClass<JDocumentPage>> __array = jni::JArrayClass<JDocumentPage>::newArray(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            const auto& __element = value.pages[__i];
+            __array->setElement(__i, *JDocumentPage::fromCpp(__element));
+          }
+          return __array;
+        }()
       );
     }
   };

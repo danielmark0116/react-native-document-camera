@@ -8,6 +8,8 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `DocumentPage` to properly resolve imports.
+namespace margelo::nitro::documentcamera { struct DocumentPage; }
 // Forward declaration of `DocumentScan` to properly resolve imports.
 namespace margelo::nitro::documentcamera { struct DocumentScan; }
 // Forward declaration of `HybridDocumentCameraSpec` to properly resolve imports.
@@ -18,6 +20,7 @@ namespace margelo::nitro::documentcamera { class HybridDocumentCameraSpec; }
 namespace DocumentCamera { class HybridDocumentCameraSpec_cxx; }
 
 // Include C++ defined types
+#include "DocumentPage.hpp"
 #include "DocumentScan.hpp"
 #include "HybridDocumentCameraSpec.hpp"
 #include <NitroModules/Promise.hpp>
@@ -35,49 +38,49 @@ namespace DocumentCamera { class HybridDocumentCameraSpec_cxx; }
  */
 namespace margelo::nitro::documentcamera::bridge::swift {
 
-  // pragma MARK: std::vector<DocumentScan>
+  // pragma MARK: std::vector<DocumentPage>
   /**
-   * Specialized version of `std::vector<DocumentScan>`.
+   * Specialized version of `std::vector<DocumentPage>`.
    */
-  using std__vector_DocumentScan_ = std::vector<DocumentScan>;
-  inline std::vector<DocumentScan> create_std__vector_DocumentScan_(size_t size) {
-    std::vector<DocumentScan> vector;
+  using std__vector_DocumentPage_ = std::vector<DocumentPage>;
+  inline std::vector<DocumentPage> create_std__vector_DocumentPage_(size_t size) {
+    std::vector<DocumentPage> vector;
     vector.reserve(size);
     return vector;
   }
   
-  // pragma MARK: std::shared_ptr<Promise<std::vector<DocumentScan>>>
+  // pragma MARK: std::shared_ptr<Promise<DocumentScan>>
   /**
-   * Specialized version of `std::shared_ptr<Promise<std::vector<DocumentScan>>>`.
+   * Specialized version of `std::shared_ptr<Promise<DocumentScan>>`.
    */
-  using std__shared_ptr_Promise_std__vector_DocumentScan___ = std::shared_ptr<Promise<std::vector<DocumentScan>>>;
-  inline std::shared_ptr<Promise<std::vector<DocumentScan>>> create_std__shared_ptr_Promise_std__vector_DocumentScan___() {
-    return Promise<std::vector<DocumentScan>>::create();
+  using std__shared_ptr_Promise_DocumentScan__ = std::shared_ptr<Promise<DocumentScan>>;
+  inline std::shared_ptr<Promise<DocumentScan>> create_std__shared_ptr_Promise_DocumentScan__() {
+    return Promise<DocumentScan>::create();
   }
-  inline PromiseHolder<std::vector<DocumentScan>> wrap_std__shared_ptr_Promise_std__vector_DocumentScan___(std::shared_ptr<Promise<std::vector<DocumentScan>>> promise) {
-    return PromiseHolder<std::vector<DocumentScan>>(std::move(promise));
+  inline PromiseHolder<DocumentScan> wrap_std__shared_ptr_Promise_DocumentScan__(std::shared_ptr<Promise<DocumentScan>> promise) {
+    return PromiseHolder<DocumentScan>(std::move(promise));
   }
   
-  // pragma MARK: std::function<void(const std::vector<DocumentScan>& /* result */)>
+  // pragma MARK: std::function<void(const DocumentScan& /* result */)>
   /**
-   * Specialized version of `std::function<void(const std::vector<DocumentScan>&)>`.
+   * Specialized version of `std::function<void(const DocumentScan&)>`.
    */
-  using Func_void_std__vector_DocumentScan_ = std::function<void(const std::vector<DocumentScan>& /* result */)>;
+  using Func_void_DocumentScan = std::function<void(const DocumentScan& /* result */)>;
   /**
-   * Wrapper class for a `std::function<void(const std::vector<DocumentScan>& / * result * /)>`, this can be used from Swift.
+   * Wrapper class for a `std::function<void(const DocumentScan& / * result * /)>`, this can be used from Swift.
    */
-  class Func_void_std__vector_DocumentScan__Wrapper final {
+  class Func_void_DocumentScan_Wrapper final {
   public:
-    explicit Func_void_std__vector_DocumentScan__Wrapper(std::function<void(const std::vector<DocumentScan>& /* result */)>&& func): _function(std::make_shared<std::function<void(const std::vector<DocumentScan>& /* result */)>>(std::move(func))) {}
-    inline void call(std::vector<DocumentScan> result) const {
+    explicit Func_void_DocumentScan_Wrapper(std::function<void(const DocumentScan& /* result */)>&& func): _function(std::make_shared<std::function<void(const DocumentScan& /* result */)>>(std::move(func))) {}
+    inline void call(DocumentScan result) const {
       _function->operator()(result);
     }
   private:
-    std::shared_ptr<std::function<void(const std::vector<DocumentScan>& /* result */)>> _function;
+    std::shared_ptr<std::function<void(const DocumentScan& /* result */)>> _function;
   };
-  Func_void_std__vector_DocumentScan_ create_Func_void_std__vector_DocumentScan_(void* _Nonnull swiftClosureWrapper);
-  inline Func_void_std__vector_DocumentScan__Wrapper wrap_Func_void_std__vector_DocumentScan_(Func_void_std__vector_DocumentScan_ value) {
-    return Func_void_std__vector_DocumentScan__Wrapper(std::move(value));
+  Func_void_DocumentScan create_Func_void_DocumentScan(void* _Nonnull swiftClosureWrapper);
+  inline Func_void_DocumentScan_Wrapper wrap_Func_void_DocumentScan(Func_void_DocumentScan value) {
+    return Func_void_DocumentScan_Wrapper(std::move(value));
   }
   
   // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
@@ -114,13 +117,13 @@ namespace margelo::nitro::documentcamera::bridge::swift {
   using std__weak_ptr_margelo__nitro__documentcamera__HybridDocumentCameraSpec_ = std::weak_ptr<margelo::nitro::documentcamera::HybridDocumentCameraSpec>;
   inline std__weak_ptr_margelo__nitro__documentcamera__HybridDocumentCameraSpec_ weakify_std__shared_ptr_margelo__nitro__documentcamera__HybridDocumentCameraSpec_(const std::shared_ptr<margelo::nitro::documentcamera::HybridDocumentCameraSpec>& strong) { return strong; }
   
-  // pragma MARK: Result<std::shared_ptr<Promise<std::vector<DocumentScan>>>>
-  using Result_std__shared_ptr_Promise_std__vector_DocumentScan____ = Result<std::shared_ptr<Promise<std::vector<DocumentScan>>>>;
-  inline Result_std__shared_ptr_Promise_std__vector_DocumentScan____ create_Result_std__shared_ptr_Promise_std__vector_DocumentScan____(const std::shared_ptr<Promise<std::vector<DocumentScan>>>& value) {
-    return Result<std::shared_ptr<Promise<std::vector<DocumentScan>>>>::withValue(value);
+  // pragma MARK: Result<std::shared_ptr<Promise<DocumentScan>>>
+  using Result_std__shared_ptr_Promise_DocumentScan___ = Result<std::shared_ptr<Promise<DocumentScan>>>;
+  inline Result_std__shared_ptr_Promise_DocumentScan___ create_Result_std__shared_ptr_Promise_DocumentScan___(const std::shared_ptr<Promise<DocumentScan>>& value) {
+    return Result<std::shared_ptr<Promise<DocumentScan>>>::withValue(value);
   }
-  inline Result_std__shared_ptr_Promise_std__vector_DocumentScan____ create_Result_std__shared_ptr_Promise_std__vector_DocumentScan____(const std::exception_ptr& error) {
-    return Result<std::shared_ptr<Promise<std::vector<DocumentScan>>>>::withError(error);
+  inline Result_std__shared_ptr_Promise_DocumentScan___ create_Result_std__shared_ptr_Promise_DocumentScan___(const std::exception_ptr& error) {
+    return Result<std::shared_ptr<Promise<DocumentScan>>>::withError(error);
   }
 
 } // namespace margelo::nitro::documentcamera::bridge::swift

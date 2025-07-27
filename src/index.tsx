@@ -18,6 +18,6 @@ const DocumentCameraHybridObject =
  */
 export function scanDocuments(
   config: DocumentScanConfig = { withOcr: true }
-): Promise<DocumentScan[]> {
+): Promise<DocumentScan> {
   return DocumentCameraHybridObject.scanDocuments(config);
 }

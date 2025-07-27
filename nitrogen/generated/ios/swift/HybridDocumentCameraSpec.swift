@@ -14,7 +14,7 @@ public protocol HybridDocumentCameraSpec_protocol: HybridObject {
   
 
   // Methods
-  func scanDocuments(config: DocumentScanConfig) throws -> Promise<[DocumentScan]>
+  func scanDocuments(config: DocumentScanConfig) throws -> Promise<DocumentScan>
 }
 
 /// See ``HybridDocumentCameraSpec``

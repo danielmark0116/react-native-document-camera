@@ -13,10 +13,10 @@
 
 namespace margelo::nitro::documentcamera::bridge::swift {
 
-  // pragma MARK: std::function<void(const std::vector<DocumentScan>& /* result */)>
-  Func_void_std__vector_DocumentScan_ create_Func_void_std__vector_DocumentScan_(void* _Nonnull swiftClosureWrapper) {
-    auto swiftClosure = DocumentCamera::Func_void_std__vector_DocumentScan_::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const std::vector<DocumentScan>& result) mutable -> void {
+  // pragma MARK: std::function<void(const DocumentScan& /* result */)>
+  Func_void_DocumentScan create_Func_void_DocumentScan(void* _Nonnull swiftClosureWrapper) {
+    auto swiftClosure = DocumentCamera::Func_void_DocumentScan::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const DocumentScan& result) mutable -> void {
       swiftClosure.call(result);
     };
   }

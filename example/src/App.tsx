@@ -10,11 +10,12 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { scanDocuments } from 'react-native-document-camera';
-import type { DocumentScan } from '../../src/types/DocumentScanner';
+import type { DocumentPage } from '../../src/types/DocumentScanner';
 
 export default function App() {
   const { width, height } = useWindowDimensions();
-  const [scans, setScans] = useState<DocumentScan[]>([]);
+  const [scans, setScans] = useState<DocumentPage[]>([]);
+  const [title, setTitle] = useState('');
 
   return (
     <View style={styles.container}>
@@ -23,9 +24,10 @@ export default function App() {
           style={styles.fab}
           onPress={async () => {
             try {
-              const scansResponse = await scanDocuments();
+              const scansResponse = await scanDocuments({ withOcr: false });
 
-              setScans(scansResponse);
+              setTitle(scansResponse.title);
+              setScans(scansResponse.pages);
             } catch (_) {
               //
             }
@@ -38,8 +40,9 @@ export default function App() {
       <ScrollView snapToInterval={width} horizontal>
         {scans.map((scan, index) => (
           <View style={[$slide(width, height)]} key={String(index)}>
+            <Text style={styles.spacedTitle}>{`Title: ${title}`}</Text>
             <Text style={styles.spacedText}>OCR:</Text>
-            <Text>{scan?.ocrText ?? 'NO OCR'}</Text>
+            <Text style={{ maxHeight: 200 }}>{scan?.ocrText ?? 'NO OCR'}</Text>
             {scan.imageUri && (
               <Image
                 src={scan.imageUri || ''}
@@ -71,6 +74,10 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     backgroundColor: 'blue',
+  },
+  spacedTitle: {
+    marginTop: 200,
+    marginBottom: 20,
   },
   spacedText: {
     marginBottom: 20,
