@@ -61,10 +61,8 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             return
         }
 
-        var docScans: [DocumentPage] = []
         var docScan = DocumentScan()
-
-        docScan.title = scan.title
+        var docScans: [DocumentPage] = []
 
         for pageNumber in 0 ..< scan.pageCount {
             let image = scan.imageOfPage(at: pageNumber)
@@ -72,6 +70,12 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
             guard let jpegData = image.jpegData(compressionQuality: 0.8) else {
                 promise.reject(withError: ScanErrors.couldNotConvertToJPG)
                 return
+            }
+
+            if pageNumber == 0 {
+                let title = Date.now.ISO8601Format()
+
+                docScan.title = title
             }
 
             let tmpURL = FileManager.default.temporaryDirectory
@@ -110,6 +114,12 @@ private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate 
                     do {
                         let text = try self.extractTextFromScan(image: image)
                         finalScans[index].ocrText = text
+
+                        if index == 0 {
+                            let title = text.split(separator: "\n").first?.trimmingCharacters(in: .whitespacesAndNewlines) ?? Date.now.ISO8601Format()
+
+                            docScan.title = title
+                        }
                     } catch {
                         // you can handle OCR errors individually or ignore
                     }
