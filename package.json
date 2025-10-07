@@ -12,6 +12,9 @@
     },
     "./package.json": "./package.json"
   },
+  "resolutions": {
+    "@pkgr/core": "^0.3.5"
+  },
   "files": [
     "src",
     "lib",

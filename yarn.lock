@@ -2461,10 +2461,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pkgr/core@npm:^0.2.4":
-  version: 0.2.8
-  resolution: "@pkgr/core@npm:0.2.8"
-  checksum: 1d34ce0e86e2eb7edcbfb05caca48f4743039c7fcb88f2cb3139fffdbd76f13c2732cfc11baab79aa56a477640f0e688692119b5798c8dfc99f7508841d6a6cf
+"@pkgr/core@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "@pkgr/core@npm:0.3.5"
+  checksum: 9ec821794f1d8cb174a45a889b176e894fea1fc7e4a10475c69288f3eb4afb7f93a2e25c4b3f09f44a6a8baaa6ffc52071453a6108bbb76f7c498d47de27099c
   languageName: node
   linkType: hard
 
