@@ -10,6 +10,10 @@ npm install react-native-document-camera react-native-nitro-modules
 > `react-native-nitro-modules` is required as this library relies on [Nitro Modules](https://nitro.margelo.com/).
 ```
 
+## Supported platforms
+
+- iOS
+
 ## Usage
 
 ```js
