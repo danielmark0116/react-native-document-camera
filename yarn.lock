@@ -11422,12 +11422,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.11.7":
-  version: 0.11.9
-  resolution: "synckit@npm:0.11.9"
+"synckit@npm:0.11.11":
+  version: 0.11.11
+  resolution: "synckit@npm:0.11.11"
   dependencies:
-    "@pkgr/core": ^0.2.4
-  checksum: 14c9cfb1a3516c33668d6b5b1decc6c9302e048e0e3902a3996af3603f4cfdaa5eb6732d70eee568bf764c0300d42a0f4dba67f85787dee554639212d3a95a50
+    "@pkgr/core": ^0.2.9
+  checksum: bc896d4320525501495654766e6b0aa394e522476ea0547af603bdd9fd7e9b65dcd6e3a237bc7eb3ab7e196376712f228bf1bf6ed1e1809f4b32dc9baf7ad413
   languageName: node
   linkType: hard
 

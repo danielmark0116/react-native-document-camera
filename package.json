@@ -14,7 +14,8 @@
   },
   "resolutions": {
     "@pkgr/core": "^0.3.5",
-    "eslint-config-prettier": "10.1.8"
+    "eslint-config-prettier": "10.1.8",
+    "synckit": "0.11.11"
   },
   "files": [
     "src",
