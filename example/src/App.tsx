@@ -24,7 +24,7 @@ export default function App() {
           style={styles.fab}
           onPress={async () => {
             try {
-              const scansResponse = await scanDocuments({ withOcr: false });
+              const scansResponse = await scanDocuments({ withOcr: true });
 
               setTitle(scansResponse.title);
               setScans(scansResponse.pages);
