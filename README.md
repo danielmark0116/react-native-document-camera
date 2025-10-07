@@ -12,15 +12,18 @@ npm install react-native-document-camera react-native-nitro-modules
 
 ## Usage
 
-
 ```js
-import { multiply } from 'react-native-document-camera';
+import { scanDocuments } from 'react-native-document-camera';
 
-// ...
+try {
+  const scansResponse = await scanDocuments({ withOcr: true });
 
-const result = multiply(3, 7);
+  setTitle(scansResponse.title);
+  setScans(scansResponse.pages);
+} catch (_) {
+  // Handle error
+}
 ```
-
 
 ## Contributing
 
