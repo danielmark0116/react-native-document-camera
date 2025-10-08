@@ -129,14 +129,13 @@
       "publish": true
     },
     "github": {
-      "release": true,
-      "autoGenerate": true
+      "release": true
     },
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": {
-          "name": "angular",
-          "type": [
+          "name": "conventionalcommits",
+          "types": [
             {
               "type": "feat",
               "section": "Features"
@@ -150,7 +149,8 @@
               "section": "Chores"
             }
           ]
-        }
+        },
+        "infile": "CHANGELOG.md"
       }
     }
   },
