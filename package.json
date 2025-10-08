@@ -50,7 +50,7 @@
     "prepare": "bob build && yarn build:plugin",
     "build:plugin": "tsc --project tsconfig.plugin.json",
     "nitrogen": "nitro-codegen",
-    "release": "yarn prepare && GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d '=' -f2) release-it --only-version"
+    "release": "yarn prepare && bash -c 'export GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d \"=\" -f2) && release-it --only-version'"
   },
   "keywords": [
     "react-native",
