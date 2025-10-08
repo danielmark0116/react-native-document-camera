@@ -57,7 +57,7 @@ If you have a bare React Native project, you need to add the following key to yo
 
 ```plist
 <key>NSCameraUsageDescription</key>
-<string>Allow $(PRODUCT_NAME) to access your camera</string>
+<string>Allow $(PRODUCT_NAME) to access your cameraa</string>
 ```
 
 ## Contributing
