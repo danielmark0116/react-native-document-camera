@@ -127,8 +127,7 @@
       "publish": true
     },
     "github": {
-      "release": true,
-      "skipChecks": true
+      "release": true
     },
     "plugins": {
       "@release-it/conventional-changelog": {
