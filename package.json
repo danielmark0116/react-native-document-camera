@@ -134,23 +134,8 @@
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": {
-          "name": "angular",
-          "types": [
-            {
-              "type": "feat",
-              "section": "Features"
-            },
-            {
-              "type": "fix",
-              "section": "Bug Fixes"
-            },
-            {
-              "type": "chore",
-              "section": "Chores"
-            }
-          ]
-        },
-        "infile": "CHANGELOG.md"
+          "name": "angular"
+        }
       }
     }
   },

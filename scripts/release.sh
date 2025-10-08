@@ -15,4 +15,4 @@ fi
 echo "GITHUB_TOKEN loaded (length: ${#GITHUB_TOKEN})"
 
 # Run release-it
-release-it
+release-it --only-version
