@@ -1,6 +1,6 @@
 {
   "name": "react-native-document-camera",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Native module utilizing platform's camera with document scanning capabilities",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
@@ -49,7 +49,7 @@
     "prepare": "bob build && yarn build:plugin",
     "build:plugin": "tsc --project tsconfig.plugin.json",
     "nitrogen": "nitro-codegen",
-    "release": "yarn prepare && release-it --only-version"
+    "release": "yarn prepare && GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d '=' -f2) release-it --only-version"
   },
   "keywords": [
     "react-native",
