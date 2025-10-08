@@ -129,27 +129,12 @@
       "publish": true
     },
     "github": {
-      "release": true,
-      "autoGenerate": true
+      "release": true
     },
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": {
-          "name": "angular",
-          "type": [
-            {
-              "type": "feat",
-              "section": "Features"
-            },
-            {
-              "type": "fix",
-              "section": "Bug Fixes"
-            },
-            {
-              "type": "chore",
-              "section": "Chores"
-            }
-          ]
+          "name": "angular"
         }
       }
     }
