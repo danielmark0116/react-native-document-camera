@@ -1,6 +1,6 @@
 {
   "name": "react-native-document-camera",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Native module utilizing platform's camera with document scanning capabilities",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
