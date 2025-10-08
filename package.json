@@ -134,7 +134,21 @@
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": {
-          "name": "conventionalcommits"
+          "name": "conventionalcommits",
+          "type": [
+            {
+              "type": "feat",
+              "section": "Features"
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes"
+            },
+            {
+              "type": "chore",
+              "section": "Chores"
+            }
+          ]
         }
       }
     }
