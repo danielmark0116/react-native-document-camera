@@ -30,6 +30,7 @@
     "nitro.json",
     "*.podspec",
     "react-native.config.js",
+    "scripts",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -50,7 +51,7 @@
     "prepare": "bob build && yarn build:plugin",
     "build:plugin": "tsc --project tsconfig.plugin.json",
     "nitrogen": "nitro-codegen",
-    "release": "yarn prepare && bash -c 'export GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d \"=\" -f2 | tr -d \"\\n\\r \") && release-it --only-version'"
+    "release": "yarn prepare && ./scripts/release.sh"
   },
   "keywords": [
     "react-native",
