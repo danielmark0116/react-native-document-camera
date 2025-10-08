@@ -3,10 +3,6 @@ import { Platform } from 'react-native';
 import type { DocumentCamera } from './specs/DocumentCamera.nitro';
 import type { DocumentScan, DocumentScanConfig } from './types/DocumentScanner';
 
-// @ts-ignore: imported so that it is included in the build
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import withCameraPermissionPlugin from './expo-plugin/src/index';
-
 const DocumentCameraHybridObject =
   NitroModules.createHybridObject<DocumentCamera>('DocumentCamera');
 
