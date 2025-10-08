@@ -20,6 +20,8 @@
   "files": [
     "src",
     "lib",
+    "plugin/build",
+    "app.plugin.js",
     "android",
     "ios",
     "cpp",
@@ -43,10 +45,11 @@
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib plugin/build",
+    "prepare": "bob build && yarn build:plugin",
+    "build:plugin": "tsc --project tsconfig.plugin.json",
     "nitrogen": "nitro-codegen",
-    "release": "release-it --only-version"
+    "release": "yarn prepare && release-it --only-version"
   },
   "keywords": [
     "react-native",
